@@ -11,6 +11,7 @@ class Game(sprite.Sprite):
         self.rect.y = player_y
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
+
 class Bone(Game):
     def update(self, speed):
         key_pressed = key.get_pressed()
@@ -42,11 +43,13 @@ window = display.set_mode((1100, 700))
 display.set_caption('Пин-понг')
 background = transform.scale(image.load('background.jpg'),(1100, 700))
 
-bone_right = Bone('bone.png', 1000, 200, 5, 40, 240)
-bone_left = Bone('bone.png', 60, 200, 5, 40, 240)
+bone_right = Bone('bone.png', 1000, 200, 5, 50, 240)
+bone_left = Bone('bone.png', 60, 200, 5, 50, 240)
 
-ball = Ball('ball.png', 550, 1, 5, 80, 80)
-platform =  Bone('bone.png', 0, 700, 0, 1100, 10)
+ball = Ball('ball.png', 550, 1, 5, 70, 70)
+
+font.init()
+font1 = font.SysFont('Arial', 100)
 
 finish = False
 game = True
@@ -64,19 +67,23 @@ while game:
         bone_left.reset()
         bone_left.left_update(5)
 
-        platform.reset()
+        lost_text = font1.render('GAME OVER', 1 , (255, 255, 255))
 
         ball.reset()
         ball.rect.x += x_speed
         ball.rect.y += y_speed
         if ball.rect.y <=  0:
             y_speed *= -1
-        if ball.rect.x >= 1200 or ball.rect.x <= 80:
-            x_speed *= -1
         if ball.rect.y >= 620:
             y_speed *= -1
         if ball.rect.colliderect(bone_right.rect) or ball.rect.colliderect(bone_left.rect):
             x_speed *= -1
+        if ball.rect.x >= 1050:
+            finish = True
+            window.blit(lost_text, (330, 200))
+        if ball.rect.x <= 50:
+            finish = True
+            window.blit(lost_text, (330, 200))
 
 
     display.update()
