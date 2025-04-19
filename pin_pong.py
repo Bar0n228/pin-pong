@@ -26,8 +26,8 @@ class Bone(Game):
         if key_pressed[K_s] and self.rect.y < 460:
             self.rect.y += speed
 
-x_speed = 2
-y_speed = 2
+x_speed = 3
+y_speed = 3
 class Ball(Game):
     def update(self, x_speed, y_speed):
         self.rect.x += x_speed
@@ -50,7 +50,10 @@ ball = Ball('ball.png', 550, 1, 5, 70, 70)
 
 font.init()
 font1 = font.SysFont('Arial', 100)
+font2 = font.SysFont('Arial', 50)
 
+player_1 = 0
+player_2 = 0
 finish = False
 game = True
 clock = time.Clock()
@@ -68,6 +71,10 @@ while game:
         bone_left.left_update(5)
 
         lost_text = font1.render('GAME OVER', 1 , (255, 255, 255))
+        count_text = font2.render(str(player_1) + ':' + str(player_2), 1, (255, 255, 255))
+        window.blit(count_text, (500, 5))
+        player1_text = font1.render('PLAYER 1 GETS 1 SCORE', 1, (255, 255, 255))
+        player2_text = font1.render('PLAYER 2 GETS 1 SCORE', 1, (255, 255, 255))
 
         ball.reset()
         ball.rect.x += x_speed
@@ -79,11 +86,21 @@ while game:
         if ball.rect.colliderect(bone_right.rect) or ball.rect.colliderect(bone_left.rect):
             x_speed *= -1
         if ball.rect.x >= 1050:
-            finish = True
-            window.blit(lost_text, (330, 200))
+            player_1 += 1
+            window.blit(count_text, (500, 5))
+            window.blit(player2_text, (450, 300))
+            ball.rect.x = 550
+            ball.rect.y = 1
+            x_speed = 3
+            y_speed = 3
         if ball.rect.x <= 50:
-            finish = True
-            window.blit(lost_text, (330, 200))
+            player_2 += 1
+            window.blit(count_text, (500, 5))
+            window.blit(player1_text, (450, 300))
+            ball.rect.x = 550
+            ball.rect.y = 1
+            x_speed = 3
+            y_speed = 3
 
 
     display.update()
